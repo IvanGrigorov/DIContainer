@@ -70,10 +70,12 @@ class DIContract {
         DIContract::$self->mappedParameterBasedObjects["_URLParser"] = [
             "className" => "URLParser",
             "isSingleton" => true,
-            "params" => array([
-                "name" => "Name of param",
-                "defaultValue" => "defaultvalue"
-            ])
+            "params" => array(
+                "url" => 
+                    [
+                        "defaultValue" => "defaultvalue"
+                    ]
+            )
         ];
     }
     

@@ -16,11 +16,11 @@ final class Validator {
         if (!isset($injectionConfig["params"])) {
             throw new \ObjectParamException\MissingParametersException("Missing parameters in injection config");
         }
-        foreach($injectionConfig["params"] as $param) {
+        foreach($injectionConfig["params"] as $key => $value) {
             $correctNameIsGiven = false;
             foreach($inputParams["params"] as $inputparam) {
-                if ($param["name"] === $inputparam["name"]) {
-                    if (!isset($inputparam["value"]) && !isset($param["defaultValue"])) {
+                if ($key === $inputparam["name"]) {
+                    if (!isset($inputparam["value"]) && !isset($value["defaultValue"])) {
                         throw new \ObjectParamException\MissingValueForParametersException("Value for parameter: " .$param["name"]. " not given");
                     }
                     $correctNameIsGiven = true;
@@ -40,8 +40,8 @@ final class Validator {
             throw new Exception("Invalid count of given parameters");
         }
         foreach($paramConfig as $param) {
-            foreach($inputConfig as $inputParam) {
-                if ($param->getName() === $inputConfig["name"]) {
+            foreach($inputConfig["params"] as $inputParam) {
+                if ($param->getName() === $inputParam["name"]) {
                     $countedParams++;
                 }
             }

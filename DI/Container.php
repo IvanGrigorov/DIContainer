@@ -6,6 +6,7 @@
  * and open the template in the editor.
  */
 
+ require_once("URLParser.php");
 class DIContainer {
     
     private static $self = null; 
@@ -51,17 +52,13 @@ class DIContainer {
         if (Validator::checkCorrectParametersForInstantiation($reflectionConstructorParams, $parameters)) {
             $setParams = [];
             foreach($reflectionConstructorParams as $reflectionParam) {
-                foreach($parameters["params"] as $inputparam) {
-                    if ($reflectionParam->getName() === $inputparam["name"]) {
-                        if (!isset($inputparam["value"])) {
-                            foreach($injectionConfig["params"] as $defaultParams) {
-                                if ($defaultParams["name"] === $inputparam["name"]) {
-                                    $setParams[] = $defaultParams["defaultValue"];
-                                }
-                            }
+                foreach($parameters["params"] as $key => $value) {
+                    if ($reflectionParam->getName() === $value["name"]) {
+                        if (!isset($value["value"])) {
+                            $setParams[] = $injectionConfig["params"][$value["name"]]["defaultValue"];            
                         }
                         else {
-                            $setParams[] = $inputparam["value"];
+                            $setParams[] = $value["value"];
                         }
                     }
                 }
