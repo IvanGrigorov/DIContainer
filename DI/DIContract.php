@@ -9,6 +9,7 @@
 require_once ("Container.php");
 require_once ("Validator.php");
 require_once ("Utils.php");
+require_once ("Log\Logger.php");
 require_once ("Errors\GlobalExceptions.php");
 
 use GlobalExceptions as CustomGlobalExceptions;
@@ -19,7 +20,8 @@ class DIContract {
     private $mappedObject = array();
     private $mappedValueTypes = array();
     private $utilsMethodsClass;
-    
+    private $logger;
+
     private function _construct() {
         
     }
@@ -29,8 +31,8 @@ class DIContract {
             DIContract::$self->mapInstances();
             DIContract::$self->mapValueTypes();
             DIContract::$self->mapParameterBasedObjects();
-            DIContract::$self->$utilsMethodsClass = new Utils();
-
+            DIContract::$self->utilsMethodsClass = new Utils();
+            DIContract::$self->logger = new Logger();
             
         }
         return DIContract::$self;
@@ -102,16 +104,20 @@ class DIContract {
             throw new Exception($interface . " is not declared in the required stack");
         }
         else {
-            $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
+            $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
             if (!isset(DIContract::$self->mappedObject[$className])) {
                 throw new Exception("GIven Inteface: ". $interface. " and extracted field name does not match the ones in the mapped Instances");
             }
             
             $instanceToInject = null;
             if (DIContract::$self->mappedObject[$className]["isSingleton"]) {
+                $trace = debug_backtrace();
+                DIContract::$self->checkAndTryToLog($trace, $className);        
                 $instanceToInject = DIContainer::instatiateSingletonClass(DIContract::$self->mappedObject[$className]["className"]);
             }            
             else {
+                $trace = debug_backtrace();
+                DIContract::$self->checkAndTryToLog($trace, $className);        
                 $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"]);
             } 
             if (!$instanceToInject instanceof $interface) {
@@ -130,6 +136,8 @@ class DIContract {
         else {
             foreach ($allowedInvocators as $value) {
                 if ($value === $invocatorClassName) {
+                    $trace = debug_backtrace();
+                    DIContract::$self->checkAndTryToLog($trace, $className);            
                     return $this->getInjection($interface);
                 }
             }
@@ -143,6 +151,7 @@ class DIContract {
         foreach (DIContract::$self->mappedValueTypes as $valueType ) {
             if ($valueType["name"] === $nameOfValueType && 
                     $valueType["type"] === $typeOfValue) {
+                DIContract::$self->checkAndTryToLog($trace, $valueType["name"]);            
                 return $valueType["value"];
             }
         }
@@ -151,7 +160,7 @@ class DIContract {
     }
 
     public function getInjectionWithParams($interface, $params) {
-        $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
+        $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
         try {
             Validator::CheckForValidInjectionWithParameters($injectionConfig, $params);
@@ -159,7 +168,15 @@ class DIContract {
         catch(Exception $e) {
             var_dump($e);
         }
+        $trace = debug_backtrace();
+        DIContract::$self->checkAndTryToLog($trace, $className);
         return DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
+    }
+
+    public function checkAndTryToLog($backtrace, $className) {
+        if (Config::IS_LOGGING_ENABLED) {
+            DIContract::$self->logger->log($backtrace, $className);
+        }
     }
 
     //public function getInjectionWithMappedInjectionParameters($interface, $params) {

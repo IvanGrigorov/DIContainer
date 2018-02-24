@@ -14,6 +14,7 @@ class DIContainer {
     private function _construct() {
     }
     
+    
     private static function getInstance() {
         if (DIContainer::$self === null) {
             DIContainer::$self = new DIContainer();
@@ -35,7 +36,7 @@ class DIContainer {
     
     public static function clearSingletonObject($class) {
         $fieldName = "_".$class;
-        if (!isset(DIContainer::getInstance()->$fieldName)) {
+        if (isset(DIContainer::getInstance()->$fieldName)) {
             DIContainer::getInstance()->$fieldName = null;
             unset(DIContainer::getInstance()->$fieldName);
         }

@@ -12,10 +12,11 @@ final class Utils {
     public function _construct() {
 
     }
+    
 
     public function extractClassNameFromInterfaceName($interface) {
         if (!isset($interface)) {
-            throw new \CustomGlobalExceptions\ParameterNotGIvenException("interface");
+            throw new \CustomGlobalExceptions\ParameterNotGIvenException();
         }
         $replacesCount = 1;
         $className = str_replace("I", "_", $interface, $replacesCount); 
