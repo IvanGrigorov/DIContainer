@@ -102,8 +102,7 @@ class DIContract {
             throw new Exception($interface . " is not declared in the required stack");
         }
         else {
-            $replacesCount = 1;
-            $className = str_replace("I", "_", $interface, $replacesCount);
+            $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
             if (!isset(DIContract::$self->mappedObject[$className])) {
                 throw new Exception("GIven Inteface: ". $interface. " and extracted field name does not match the ones in the mapped Instances");
             }
@@ -123,8 +122,7 @@ class DIContract {
     }
     
     public function getInjectionwithScopeCheck($interface, $invocatorClassName) {
-        $replacesCount = 1;
-        $className = str_replace("I", "_", $interface, $replacesCount);
+        $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
         $allowedInvocators = DIContract::$self->mappedObject[$className]["allowedInvocators"];
         if (!isset($allowedInvocators)) {
             throw new Exception("Cannot make check for allowed Invocators. allowedInvocators field is not set for ". DIContract::$self->mappedObject[$className]);
@@ -153,8 +151,7 @@ class DIContract {
     }
 
     public function getInjectionWithParams($interface, $params) {
-        $replacesCount = 1;
-        $className = str_replace("I", "_", $interface, $replacesCount);
+        $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
         try {
             Validator::CheckForValidInjectionWithParameters($injectionConfig, $params);
