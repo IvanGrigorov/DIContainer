@@ -1,7 +1,7 @@
 <?php
 
-include_once("Errors\ObjectParametersExceptions.php");
-include_once("Errors\GlobalExceptions.php");
+require_once("Errors\ObjectParametersExceptions.php");
+require_once("Errors\GlobalExceptions.php");
 
 use ObjectParametersExceptions as ObjectParamException; 
 use GlobalExceptions as CustomGlobalExceptions;
@@ -33,9 +33,9 @@ final class Validator {
     }
 
     public static function checkCorrectParametersForInstantiation($paramConfig, $inputConfig) {
-        $countOfAllConfigParams = count($paramConfig);
+        $countOfConfigParams = count($paramConfig);
         $countedParams = 0;
-        if (!($countOfAllConfigParams === count($inputConfig))) {
+        if (!($countOfConfigParams === count($inputConfig))) {
             // Make custom Exception
             throw new Exception("Invalid count of given parameters");
         }
@@ -46,7 +46,7 @@ final class Validator {
                 }
             }
         }
-        if ($countOfAllConfigParams === $countedParams) {
+        if ($countOfConfigParams === $countedParams) {
             return true;
         }
         return false;

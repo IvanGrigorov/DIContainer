@@ -8,14 +8,17 @@
 
 require_once ("Container.php");
 require_once ("Validator.php");
+require_once ("Utils.php");
+require_once ("Errors\GlobalExceptions.php");
 
+use GlobalExceptions as CustomGlobalExceptions;
 
 class DIContract {
     
     private static $self = null;
     private $mappedObject = array();
     private $mappedValueTypes = array();
-
+    private $utilsMethodsClass;
     
     private function _construct() {
         
@@ -26,8 +29,9 @@ class DIContract {
             DIContract::$self->mapInstances();
             DIContract::$self->mapValueTypes();
             DIContract::$self->mapParameterBasedObjects();
+            DIContract::$self->$utilsMethodsClass = new Utils();
 
-
+            
         }
         return DIContract::$self;
     }
@@ -78,6 +82,20 @@ class DIContract {
             )
         ];
     }
+
+    //private function mapInjectionHieararchyObjects() {
+    //    DIContract::$self->mappedInjectionHieararchyObjects["_URLParser"] = [
+    //        "className" => "URLParser",
+    //        "isSingleton" => true,
+    //        "params" => array(
+    //            "url" => 
+    //                [
+    //                    "injectionMathod" => "defaultvalue",
+    //                    "params"
+    //                ]
+    //        )
+    //    ];
+    //}
     
     public function getInjection($interface) {
         if (!interface_exists($interface)) {
@@ -135,6 +153,7 @@ class DIContract {
     }
 
     public function getInjectionWithParams($interface, $params) {
+        $replacesCount = 1;
         $className = str_replace("I", "_", $interface, $replacesCount);
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
         try {
@@ -144,7 +163,13 @@ class DIContract {
             var_dump($e);
         }
         return DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
-
-
     }
+
+    //public function getInjectionWithMappedInjectionParameters($interface, $params) {
+    //    if(!isset($interface) || !isset($params)) {
+    //        throw new \CustomGlobalExceptions\ParameterNotGIvenException("Parameters are missing or not passed to the function");
+    //    }
+        // Move class name extraction in method 
+    //    $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
+    //}
 }
