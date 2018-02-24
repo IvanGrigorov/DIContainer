@@ -15,7 +15,7 @@ final class Utils {
 
     public function extractClassNameFromInterfaceName($interface) {
         if (!isset($interface)) {
-            throw new \CustomGlobalExceptions\ParameterNotGIvenException("Parameters are missing or not passed to the function");
+            throw new \CustomGlobalExceptions\ParameterNotGIvenException("interface");
         }
         $replacesCount = 1;
         $className = str_replace("I", "_", $interface, $replacesCount); 

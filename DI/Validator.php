@@ -11,23 +11,23 @@ final class Validator {
 
     public static function CheckForValidInjectionWithParameters($injectionConfig, $inputParams) {
         if (!isset($injectionConfig) || !isset($inputParams)) {
-            throw new \CustomGlobalExceptions\ParameterNotGIvenException("Parameters are missing or not passed to the function");
+            throw new \CustomGlobalExceptions\ParameterNotGIvenException();
         }
         if (!isset($injectionConfig["params"])) {
-            throw new \ObjectParamException\MissingParametersException("Missing parameters in injection config");
+            throw new \ObjectParamException\MissingParametersException();
         }
         foreach($injectionConfig["params"] as $key => $value) {
             $correctNameIsGiven = false;
             foreach($inputParams["params"] as $inputparam) {
                 if ($key === $inputparam["name"]) {
                     if (!isset($inputparam["value"]) && !isset($value["defaultValue"])) {
-                        throw new \ObjectParamException\MissingValueForParametersException("Value for parameter: " .$param["name"]. " not given");
+                        throw new \ObjectParamException\MissingValueForParametersException($param["name"]);
                     }
                     $correctNameIsGiven = true;
                 }
             } 
             if (!$correctNameIsGiven) {
-                throw new \ObjectParamException\MissingNameInParametersException("Missing name: " .$param["name"]. " from the input config");
+                throw new \ObjectParamException\MissingNameInParametersException($param["name"]);
             }
         }
     }
