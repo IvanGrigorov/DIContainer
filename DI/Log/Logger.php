@@ -6,7 +6,7 @@ final class Logger {
 
     private $filePathToLogInstantiations;
 
-    public function _construct() {
+    public function __construct() {
         $this->filePathToLogInstantiations = Config::LOG_FILE_NAME;
     }
 

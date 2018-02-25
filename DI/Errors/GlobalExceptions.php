@@ -9,8 +9,8 @@ use \Exception as Exception;
         //    parent::_construct("Parameter: ".$paramName." is missing or not passed to the function ");
         //}
 
-        public function _construct() {
-            parent::_construct("Parameter are missing or not passed to the function ");
+        public function __construct() {
+            parent::__construct("Parameter are missing or not passed to the function ");
         }
     }
 

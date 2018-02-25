@@ -9,7 +9,7 @@ use WorkflowErrors as WorkflowErrors;
 
 final class Utils {
 
-    public function _construct() {
+    public function __construct() {
 
     }
     
@@ -21,7 +21,7 @@ final class Utils {
         $replacesCount = 1;
         $className = str_replace("I", "_", $interface, $replacesCount); 
         if ($className === $interface) {
-            throw new \WorkflowErrors\ConvertingInterfaceToClassNameErro($interface);
+            throw new \WorkflowErrors\ConvertingInterfaceToClassNameException($interface);
         }
         return $className;
 

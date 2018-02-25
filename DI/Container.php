@@ -11,7 +11,7 @@ class DIContainer {
     
     private static $self = null; 
     
-    private function _construct() {
+    private function __construct() {
     }
     
     

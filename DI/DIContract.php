@@ -22,7 +22,7 @@ class DIContract {
     private $utilsMethodsClass;
     private $logger;
 
-    private function _construct() {
+    private function __construct() {
         
     }
     public static function getInstance() {
@@ -175,7 +175,13 @@ class DIContract {
 
     public function checkAndTryToLog($backtrace, $className) {
         if (Config::IS_LOGGING_ENABLED) {
-            DIContract::$self->logger->log($backtrace, $className);
+            try {
+                Validator::checkIfFileExists(Config::LOG_FILE_NAME);
+                DIContract::$self->logger->log($backtrace, $className);
+            }
+            catch(\WorkflowErrors\FileNotFoundException $e) {
+                var_dump($e->getMessage());
+            }
         }
     }
 

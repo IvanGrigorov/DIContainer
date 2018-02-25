@@ -2,9 +2,11 @@
 
 require_once("Errors\ObjectParametersExceptions.php");
 require_once("Errors\GlobalExceptions.php");
+require_once("Errors\WorkflowErrors.php");
 
 use ObjectParametersExceptions as ObjectParamException; 
 use GlobalExceptions as CustomGlobalExceptions;
+use WorkflowErrors as WorkflowErrors;
 
 
 final class Validator {
@@ -51,5 +53,12 @@ final class Validator {
         }
         return false;
 
+    }
+
+    public static function checkIfFileExists($filePath) {
+        if (!file_exists($filePath)) {
+            $exception = new  \WorkflowErrors\FileNotFoundException($filePath);
+            throw $exception;
+        }
     }
 }
