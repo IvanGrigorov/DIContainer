@@ -1,4 +1,16 @@
 <?php
+/**
+ * File: DIContract.php
+ * Project: DI
+ * File Created: Saturday, 17th February 2018 3:12:18 pm
+ * Author: Ivan Grigorov
+ * Contact:  ivangrigorov9 at gmail.com
+ * -----
+ * Last Modified: Sunday, 25th February 2018 10:31:53 pm
+ * Modified By: Ivan Grigorov
+ * -----
+ * License: MIT
+ */
 
 /* 
  * To change this license header, choose License Headers in Project Properties.

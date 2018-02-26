@@ -1,4 +1,16 @@
 <?php 
+/**
+ * File: Logger.php
+ * Project: Log
+ * File Created: Sunday, 25th February 2018 7:12:16 pm
+ * Author: Ivan Grigorov
+ * Contact:  ivangrigorov9 at gmail.com
+ * -----
+ * Last Modified: Sunday, 25th February 2018 10:31:23 pm
+ * Modified By: Ivan Grigorov
+ * -----
+ * License: MIT
+ */
 
 require_once(dirname(__FILE__)."/../Config.php");
 

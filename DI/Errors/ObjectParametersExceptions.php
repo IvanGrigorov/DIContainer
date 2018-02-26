@@ -1,4 +1,16 @@
 <?php 
+/**
+ * File: ObjectParametersExceptions.php
+ * Project: Errors
+ * File Created: Saturday, 17th February 2018 6:12:12 pm
+ * Author: Ivan Grigorov
+ * Contact:  ivangrigorov9 at gmail.com
+ * -----
+ * Last Modified: Sunday, 25th February 2018 10:31:03 pm
+ * Modified By: Ivan Grigorov
+ * -----
+ * License: MIT
+ */
 
 namespace ObjectParametersExceptions;
 use \Exception as Exception;
