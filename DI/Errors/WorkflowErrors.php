@@ -1,12 +1,12 @@
 <?php 
 /**
  * File: WorkflowErrors.php
- * Project: Errors
+ * Project: PHPDI
  * File Created: Sunday, 25th February 2018 7:12:16 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:31:13 pm
+ * Last Modified: Wednesday, 28th February 2018 11:52:06 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -29,4 +29,10 @@ use \Exception as Exception;
         }
     }
 
+    final class ConstantNotDefinedException extends Exception {
+
+        public function __construct($constantName) {
+            parent::__construct("Constant not defined: ".$constantName);
+        }
+    }
 

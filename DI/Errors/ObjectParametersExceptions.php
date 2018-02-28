@@ -1,12 +1,12 @@
 <?php 
 /**
  * File: ObjectParametersExceptions.php
- * Project: Errors
+ * Project: PHPDI
  * File Created: Saturday, 17th February 2018 6:12:12 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:31:03 pm
+ * Last Modified: Wednesday, 28th February 2018 11:51:57 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT

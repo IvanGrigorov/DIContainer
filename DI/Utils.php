@@ -1,12 +1,12 @@
 <?php
 /**
  * File: Utils.php
- * Project: DI
+ * Project: PHPDI
  * File Created: Saturday, 24th February 2018 2:43:29 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:32:11 pm
+ * Last Modified: Wednesday, 28th February 2018 11:52:34 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT

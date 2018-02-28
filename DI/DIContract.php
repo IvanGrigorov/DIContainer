@@ -1,12 +1,12 @@
 <?php
 /**
  * File: DIContract.php
- * Project: DI
+ * Project: PHPDI
  * File Created: Saturday, 17th February 2018 3:12:18 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:31:53 pm
+ * Last Modified: Wednesday, 28th February 2018 11:52:29 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT

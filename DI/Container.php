@@ -1,12 +1,12 @@
 <?php
 /**
  * File: Container.php
- * Project: DI
+ * Project: PHPDI
  * File Created: Saturday, 17th February 2018 3:12:18 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:31:43 pm
+ * Last Modified: Wednesday, 28th February 2018 11:53:20 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -18,12 +18,17 @@
  * and open the template in the editor.
  */
 
- require_once("URLParser.php");
-class DIContainer {
+ require_once("AutoLoader/AutoLoader.php");
+ require_once("AutoLoader/LoaderConfig.php");
+ require_once("Errors\WorkflowErrors.php");
+
+ use WorkflowErrors as WorkflowErrors;
+ class DIContainer {
     
     private static $self = null; 
-    
+    private $loader;
     private function __construct() {
+        $this->loader = new AutoLoader();
     }
     
     
@@ -35,10 +40,22 @@ class DIContainer {
     }
     
     public static function instantiateClass($class) {
+        if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
+            $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
+            throw $exception;
+
+        }
+        DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
         return new $class();
     }
     
     public static function instatiateSingletonClass($class) {
+        if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
+            $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
+            throw $exception;
+
+        }
+        DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
         $fieldName = "_".$class;
         if (!isset(DIContainer::getInstance()->$fieldName)) {
             DIContainer::getInstance()->$fieldName = new $class();
@@ -59,6 +76,12 @@ class DIContainer {
     }
 
     public static function instantiateObjectWithParameters($class, $parameters, $injectionConfig) {
+        if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
+            $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
+            throw $exception;
+
+        }
+        DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
         $reflectionClass = new ReflectionClass($class);
         $reflectionConstructor = $reflectionClass->getConstructor();
         $reflectionConstructorParams = $reflectionConstructor->getParameters();

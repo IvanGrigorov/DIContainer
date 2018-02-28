@@ -1,12 +1,12 @@
 <?php
 /**
  * File: Validator.php
- * Project: DI
+ * Project: PHPDI
  * File Created: Saturday, 17th February 2018 3:29:32 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:32:33 pm
+ * Last Modified: Wednesday, 28th February 2018 11:52:42 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -73,5 +73,12 @@ final class Validator {
             $exception = new  \WorkflowErrors\FileNotFoundException($filePath);
             throw $exception;
         }
+    }
+
+    public static function checkIfConstantIsDefined($constantName) {
+        if ($constantName === null) {
+            return false;
+        }
+        return true;
     }
 }

@@ -1,12 +1,12 @@
 <?php 
 /**
  * File: GlobalExceptions.php
- * Project: Errors
+ * Project: PHPDI
  * File Created: Saturday, 17th February 2018 6:29:41 pm
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 25th February 2018 10:45:32 pm
+ * Last Modified: Wednesday, 28th February 2018 11:51:53 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
