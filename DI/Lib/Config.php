@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:52:19 pm
+ * Last Modified: Saturday, 3rd March 2018 9:53:46 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -16,6 +16,8 @@ final class Config {
 
     const LOG_FILE_NAME = "C:\Users\Ivan Grigorov\Desktop\Logging.txt";
     const IS_LOGGING_ENABLED = "C:\Users\Ivan Grigorov\Desktop\Logging.txt";
+    const CHECK_FOR_INTERFACE = false;
+
 
 
 }

@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Thursday, 1st March 2018 9:18:17 pm
+ * Last Modified: Saturday, 3rd March 2018 9:49:31 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -18,11 +18,11 @@
  * and open the template in the editor.
  */
 
-define("FILE_LOCATION", dirname(__FILE__));
+//define("FILE_LOCATION", dirname(__FILE__));
 
- require_once(FILE_LOCATION."/../AutoLoader/AutoLoader.php");
- require_once(FILE_LOCATION."/../AutoLoader/LoaderConfig.php");
- require_once(FILE_LOCATION."/../Errors/WorkflowErrors.php");
+ require_once(dirname(__FILE__)."/../AutoLoader/AutoLoader.php");
+ require_once(dirname(__FILE__)."/../AutoLoader/LoaderConfig.php");
+ require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 
  use WorkflowErrors as WorkflowErrors;
  class DIContainer {
@@ -105,6 +105,21 @@ define("FILE_LOCATION", dirname(__FILE__));
         }
         throw new Exception("Wrong param config");
     }
-    
+
+
+    public static function instantiateSingletonObjectWithParameters($class, $parameters, $injectionConfig) {
+        if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
+            $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
+            throw $exception;
+
+        }
+        DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
+        $fieldName = "_".$class;
+        if (!isset(DIContainer::getInstance()->$fieldName)) {
+            DIContainer::getInstance()->$fieldName = DIContainer::getInstance()->instantiateObjectWithParameters($class, $parameters, $injectionConfig);
+        }
+        return DIContainer::getInstance()->$fieldName;
+    }
+
     // Add scope check if the instance is called from corect file
 }

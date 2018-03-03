@@ -6,16 +6,18 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Friday, 2nd March 2018 8:58:38 pm
+ * Last Modified: Saturday, 3rd March 2018 9:54:58 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-define("FILE_LOCATION", dirname(__FILE__));
-require_once(FILE_LOCATION."/../Errors/ObjectParametersExceptions.php");
-require_once(FILE_LOCATION."/../Errors/GlobalExceptions.php");
-require_once(FILE_LOCATION."/../Errors/WorkflowErrors.php");
+//define("FILE_LOCATION", dirname(__FILE__));
+require_once(dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
+require_once(dirname(__FILE__)."/../Errors/GlobalExceptions.php");
+require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
+require_once(dirname(__FILE__)."/../Lib/Config.php");
+
 
 use ObjectParametersExceptions as ObjectParamException; 
 use GlobalExceptions as CustomGlobalExceptions;
@@ -83,7 +85,7 @@ final class Validator {
     }
 
     public static function checkIfInterfaceIsLoaded($interface) {
-        if (!interface_exists($interface)) {
+        if (!interface_exists($interface) && Config::CHECK_FOR_INTERFACE) {
             return false;
         }
         return true;

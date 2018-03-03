@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 7:42:11 pm
+ * Last Modified: Saturday, 3rd March 2018 10:06:23 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -18,15 +18,15 @@
  * and open the template in the editor.
  */
 
-define("FILE_LOCATION", dirname(__FILE__));
+//define("FILE_LOCATION", dirname(__FILE__));
 
 require_once ("Container.php");
-require_once (FILE_LOCATION."/../Utils/Validator.php");
-require_once (FILE_LOCATION."/../Utils/Utils.php");
-require_once (FILE_LOCATION."/../Log/Logger.php");
-require_once (FILE_LOCATION."/../Errors/GlobalExceptions.php");
-require_once (FILE_LOCATION."/../Errors/WorkFlowErrors.php");
-require_once (FILE_LOCATION."/../Errors/ObjectParametersExceptions.php");
+require_once (dirname(__FILE__)."/../Utils/Validator.php");
+require_once (dirname(__FILE__)."/../Utils/Utils.php");
+require_once (dirname(__FILE__)."/../Log/Logger.php");
+require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
+require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
+require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
 
 
 use GlobalExceptions as CustomGlobalExceptions;
@@ -121,7 +121,7 @@ class DIContract {
     //}
     
     public function getInjection($interface) {
-        if (!Validator::checkIfInterfaceIsLoaded) {
+        if (!Validator::checkIfInterfaceIsLoaded($interface)) {
             throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
         }
         else {
@@ -141,7 +141,7 @@ class DIContract {
                 DIContract::$self->checkAndTryToLog($trace, $className);        
                 $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"]);
             } 
-            if (!$instanceToInject instanceof $interface) {
+            if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
                 throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
             }
             return $instanceToInject;
@@ -149,7 +149,7 @@ class DIContract {
     }
     
     public function getInjectionwithScopeCheck($interface, $invocatorClassName) {
-        if (!Validator::checkIfInterfaceIsLoaded) {
+        if (!Validator::checkIfInterfaceIsLoaded($interface)) {
             throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
         }
         $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
@@ -169,7 +169,7 @@ class DIContract {
                     $trace = debug_backtrace();
                     DIContract::$self->checkAndTryToLog($trace, $className);            
                     $instanceToInject = $this->getInjection($interface);
-                    if (!$instanceToInject instanceof $interface) {
+                    if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
                         throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
                     }
                     return $instanceToInject;
@@ -195,11 +195,11 @@ class DIContract {
     }
 
     public function getInjectionWithParams($interface, $params) {
-        if (!Validator::checkIfInterfaceIsLoaded) {
+        if (!Validator::checkIfInterfaceIsLoaded($interface)) {
             throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
         }
         $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
-        if (!isset(DIContract::$self->mappedObject[$className])) {
+        if (!isset(DIContract::$self->mappedParameterBasedObjects[$className])) {
             throw new \CustomGlobalExceptions\ParameterNotSetException($className);
         }
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
@@ -211,8 +211,15 @@ class DIContract {
         }
         $trace = debug_backtrace();
         DIContract::$self->checkAndTryToLog($trace, $className);
-        $instanceToInject = DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
-        if (!$instanceToInject instanceof $interface) {
+        $instanceToInject = null;
+        if (DIContract::$self->mappedParameterBasedObjects[$className]["isSingleton"]) {
+            $instanceToInject = DIContainer::instantiateSingletonObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
+        }
+        else {
+            $instanceToInject = DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
+
+        }
+        if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
             throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
         }
         return $instanceToInject;

@@ -6,14 +6,14 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Thursday, 1st March 2018 9:10:26 pm
+ * Last Modified: Saturday, 3rd March 2018 9:50:29 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-define("FILE_LOCATION", dirname(__FILE__));
-require_once(FILE_LOCATION."/../Lib/Config.php");
+//define("FILE_LOCATION", dirname(__FILE__));
+require_once(dirname(__FILE__)."/../Lib/Config.php");
 
 final class Logger {
 
