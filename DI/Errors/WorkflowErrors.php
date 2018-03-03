@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:52:06 pm
+ * Last Modified: Friday, 2nd March 2018 9:02:31 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -33,6 +33,21 @@ use \Exception as Exception;
 
         public function __construct($constantName) {
             parent::__construct("Constant not defined: ".$constantName);
+        }
+    }
+
+    
+    final class InterfaceNotInheritedException extends Exception {
+
+        public function __construct($interface) {
+            parent::__construct("Mapped class do not inherits the given Inteface: ". $interface);
+        }
+    }
+
+    final class InterfaceNotLoadedException extends Exception {
+
+        public function __construct($interface) {
+            parent::__construct($interface . " is not declared in the required stack");
         }
     }
 

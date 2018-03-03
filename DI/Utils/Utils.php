@@ -6,14 +6,16 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:52:34 pm
+ * Last Modified: Thursday, 1st March 2018 9:15:50 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-require_once("Errors\GlobalExceptions.php");
-require_once("Errors\WorkflowErrors.php");
+define("FILE_LOCATION", dirname(__FILE__));
+
+require_once(FILE_LOCATION."/../Errors/GlobalExceptions.php");
+require_once(FILE_LOCATION."/../Errors/WorkflowErrors.php");
 
 use GlobalExceptions as CustomGlobalExceptions;
 use WorkflowErrors as WorkflowErrors;

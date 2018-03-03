@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:51:57 pm
+ * Last Modified: Friday, 2nd March 2018 8:50:19 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -30,6 +30,12 @@ use \Exception as Exception;
     final class MissingValueForParametersException extends Exception {
         public function __construct($paramName) {
             parent::__construct("Value for parameter: " .$paramName. " not given");
+        }
+    }
+
+    final class InvocatorNotAllowedException extends Exception {
+        public function __construct($invocatorClassName, $className) {
+            parent::__construct($invocatorClassName. " is not part of the allowed invocators for ". $className);
         }
     }
     

@@ -6,16 +6,16 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:52:42 pm
+ * Last Modified: Friday, 2nd March 2018 8:58:38 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-
-require_once("Errors\ObjectParametersExceptions.php");
-require_once("Errors\GlobalExceptions.php");
-require_once("Errors\WorkflowErrors.php");
+define("FILE_LOCATION", dirname(__FILE__));
+require_once(FILE_LOCATION."/../Errors/ObjectParametersExceptions.php");
+require_once(FILE_LOCATION."/../Errors/GlobalExceptions.php");
+require_once(FILE_LOCATION."/../Errors/WorkflowErrors.php");
 
 use ObjectParametersExceptions as ObjectParamException; 
 use GlobalExceptions as CustomGlobalExceptions;
@@ -81,4 +81,12 @@ final class Validator {
         }
         return true;
     }
+
+    public static function checkIfInterfaceIsLoaded($interface) {
+        if (!interface_exists($interface)) {
+            return false;
+        }
+        return true;
+
+    } 
 }

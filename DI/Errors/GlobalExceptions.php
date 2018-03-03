@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:51:53 pm
+ * Last Modified: Saturday, 3rd March 2018 7:39:16 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -23,6 +23,13 @@ use \Exception as Exception;
 
         public function __construct() {
             parent::__construct("Parameter are missing or not passed to the function ");
+        }
+    }
+
+    final class ParameterNotSetException extends Exception {
+
+        public function __construct($parameter) {
+            parent::__construct($parameter . " is not set in the object config");
         }
     }
 

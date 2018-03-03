@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 28th February 2018 11:52:29 pm
+ * Last Modified: Saturday, 3rd March 2018 7:42:11 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -18,13 +18,22 @@
  * and open the template in the editor.
  */
 
+define("FILE_LOCATION", dirname(__FILE__));
+
 require_once ("Container.php");
-require_once ("Validator.php");
-require_once ("Utils.php");
-require_once ("Log\Logger.php");
-require_once ("Errors\GlobalExceptions.php");
+require_once (FILE_LOCATION."/../Utils/Validator.php");
+require_once (FILE_LOCATION."/../Utils/Utils.php");
+require_once (FILE_LOCATION."/../Log/Logger.php");
+require_once (FILE_LOCATION."/../Errors/GlobalExceptions.php");
+require_once (FILE_LOCATION."/../Errors/WorkFlowErrors.php");
+require_once (FILE_LOCATION."/../Errors/ObjectParametersExceptions.php");
+
 
 use GlobalExceptions as CustomGlobalExceptions;
+use WorkflowErrors as WorkflowErrors;
+use ObjectParametersExceptions as ObjectParametersExceptions;
+
+
 
 class DIContract {
     
@@ -112,13 +121,13 @@ class DIContract {
     //}
     
     public function getInjection($interface) {
-        if (!interface_exists($interface)) {
-            throw new Exception($interface . " is not declared in the required stack");
+        if (!Validator::checkIfInterfaceIsLoaded) {
+            throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
         }
         else {
             $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
             if (!isset(DIContract::$self->mappedObject[$className])) {
-                throw new Exception("GIven Inteface: ". $interface. " and extracted field name does not match the ones in the mapped Instances");
+                throw new \CustomGlobalExceptions\ParameterNotSetException($className);
             }
             
             $instanceToInject = null;
@@ -133,14 +142,23 @@ class DIContract {
                 $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"]);
             } 
             if (!$instanceToInject instanceof $interface) {
-                throw new Exception("Mapped class do not inherits the given Inteface: ". $interface);
+                throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
             }
             return $instanceToInject;
         }
     }
     
     public function getInjectionwithScopeCheck($interface, $invocatorClassName) {
+        if (!Validator::checkIfInterfaceIsLoaded) {
+            throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
+        }
         $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
+        if (!isset(DIContract::$self->mappedObject[$className])) {
+            throw new \CustomGlobalExceptions\ParameterNotSetException($className);
+        }
+        if (!isset(DIContract::$self->mappedObject[$className]["allowedInvocators"])) {
+            throw new \CustomGlobalExceptions\ParameterNotSetException('allowedInvocators');
+        }
         $allowedInvocators = DIContract::$self->mappedObject[$className]["allowedInvocators"];
         if (!isset($allowedInvocators)) {
             throw new Exception("Cannot make check for allowed Invocators. allowedInvocators field is not set for ". DIContract::$self->mappedObject[$className]);
@@ -150,10 +168,15 @@ class DIContract {
                 if ($value === $invocatorClassName) {
                     $trace = debug_backtrace();
                     DIContract::$self->checkAndTryToLog($trace, $className);            
-                    return $this->getInjection($interface);
+                    $instanceToInject = $this->getInjection($interface);
+                    if (!$instanceToInject instanceof $interface) {
+                        throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
+                    }
+                    return $instanceToInject;
+        
                 }
             }
-            throw new Exception($invocatorClassName. " is not part of the allowed invocators for ". $className);
+            throw new \ObjectParametersExceptions\InvocatorNotAllowedException($invocatorClassName, $className);
 
         }
     }
@@ -172,7 +195,13 @@ class DIContract {
     }
 
     public function getInjectionWithParams($interface, $params) {
+        if (!Validator::checkIfInterfaceIsLoaded) {
+            throw new \WorkflowErrors\InterfaceNotLoadedException($interface);
+        }
         $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
+        if (!isset(DIContract::$self->mappedObject[$className])) {
+            throw new \CustomGlobalExceptions\ParameterNotSetException($className);
+        }
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
         try {
             Validator::CheckForValidInjectionWithParameters($injectionConfig, $params);
@@ -182,7 +211,12 @@ class DIContract {
         }
         $trace = debug_backtrace();
         DIContract::$self->checkAndTryToLog($trace, $className);
-        return DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
+        $instanceToInject = DIContainer::instantiateObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
+        if (!$instanceToInject instanceof $interface) {
+            throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
+        }
+        return $instanceToInject;
+
     }
 
     public function checkAndTryToLog($backtrace, $className) {
