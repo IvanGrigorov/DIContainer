@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 10:06:23 pm
+ * Last Modified: Sunday, 4th March 2018 6:11:59 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -24,6 +24,7 @@ require_once ("Container.php");
 require_once (dirname(__FILE__)."/../Utils/Validator.php");
 require_once (dirname(__FILE__)."/../Utils/Utils.php");
 require_once (dirname(__FILE__)."/../Log/Logger.php");
+require_once (dirname(__FILE__)."/../Log/ErrorLogger.php");
 require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
 require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
@@ -41,7 +42,6 @@ class DIContract {
     private $mappedObject = array();
     private $mappedValueTypes = array();
     private $utilsMethodsClass;
-    private $logger;
 
     private function __construct() {
         
@@ -53,7 +53,6 @@ class DIContract {
             DIContract::$self->mapValueTypes();
             DIContract::$self->mapParameterBasedObjects();
             DIContract::$self->utilsMethodsClass = new Utils();
-            DIContract::$self->logger = new Logger();
             
         }
         return DIContract::$self;
@@ -131,14 +130,17 @@ class DIContract {
             }
             
             $instanceToInject = null;
+            if (!isset(DIContract::$self->mappedObject[$className]["isSingleton"])) {
+                throw new \CustomGlobalExceptions\ParameterNotSetException("isSingleton");
+            }
             if (DIContract::$self->mappedObject[$className]["isSingleton"]) {
                 $trace = debug_backtrace();
-                DIContract::$self->checkAndTryToLog($trace, $className);        
+                Logger::getInstance()->tryLoggingInjection($trace, $className);
                 $instanceToInject = DIContainer::instatiateSingletonClass(DIContract::$self->mappedObject[$className]["className"]);
             }            
             else {
                 $trace = debug_backtrace();
-                DIContract::$self->checkAndTryToLog($trace, $className);        
+                Logger::getInstance()->tryLoggingInjection($trace, $className);
                 $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"]);
             } 
             if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
@@ -167,7 +169,7 @@ class DIContract {
             foreach ($allowedInvocators as $value) {
                 if ($value === $invocatorClassName) {
                     $trace = debug_backtrace();
-                    DIContract::$self->checkAndTryToLog($trace, $className);            
+                    Logger::getInstance()->tryLoggingInjection($trace, $className);
                     $instanceToInject = $this->getInjection($interface);
                     if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
                         throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
@@ -186,7 +188,7 @@ class DIContract {
         foreach (DIContract::$self->mappedValueTypes as $valueType ) {
             if ($valueType["name"] === $nameOfValueType && 
                     $valueType["type"] === $typeOfValue) {
-                DIContract::$self->checkAndTryToLog($trace, $valueType["name"]);            
+                Logger::getInstance()->tryLoggingInjection($trace, $valueType["name"]);            
                 return $valueType["value"];
             }
         }
@@ -207,11 +209,14 @@ class DIContract {
             Validator::CheckForValidInjectionWithParameters($injectionConfig, $params);
         }
         catch(Exception $e) {
-            var_dump($e);
+            ErrorLogger::getInstance()->tryLoggingError($e);
         }
         $trace = debug_backtrace();
-        DIContract::$self->checkAndTryToLog($trace, $className);
+        Logger::getInstance()->tryLoggingInjection($trace, $className);
         $instanceToInject = null;
+        if (!isset(DIContract::$self->mappedObject[$className]["isSingleton"])) {
+            throw new \CustomGlobalExceptions\ParameterNotSetException("isSingleton");
+        }
         if (DIContract::$self->mappedParameterBasedObjects[$className]["isSingleton"]) {
             $instanceToInject = DIContainer::instantiateSingletonObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
         }
@@ -226,17 +231,7 @@ class DIContract {
 
     }
 
-    public function checkAndTryToLog($backtrace, $className) {
-        if (Config::IS_LOGGING_ENABLED) {
-            try {
-                Validator::checkIfFileExists(Config::LOG_FILE_NAME);
-                DIContract::$self->logger->log($backtrace, $className);
-            }
-            catch(\WorkflowErrors\FileNotFoundException $e) {
-                var_dump($e->getMessage());
-            }
-        }
-    }
+
 
     //public function getInjectionWithMappedInjectionParameters($interface, $params) {
     //    if(!isset($interface) || !isset($params)) {

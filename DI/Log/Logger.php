@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 9:50:29 pm
+ * Last Modified: Sunday, 4th March 2018 6:04:15 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -14,21 +14,46 @@
 
 //define("FILE_LOCATION", dirname(__FILE__));
 require_once(dirname(__FILE__)."/../Lib/Config.php");
+require_once(dirname(__FILE__)."/ErrorLogger.php");
+require_once(dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
+require_once(dirname(__FILE__)."/../Utils/Validator.php");
+
+use WorkflowErrors as WorkflowErrors;
 
 final class Logger {
 
     private $filePathToLogInstantiations;
+    private static $instance = null;
 
-    public function __construct() {
+
+    private function __construct() {
         $this->filePathToLogInstantiations = Config::LOG_FILE_NAME;
     }
 
-    public function log($backtrace, $injection) {
-        file_put_contents(Config::LOG_FILE_NAME, "==================== \r\n", FILE_APPEND); 
-        file_put_contents(Config::LOG_FILE_NAME, "file: ".$backtrace[0]["file"]. " \r\n", FILE_APPEND); 
-        file_put_contents(Config::LOG_FILE_NAME, "line: ".$backtrace[0]["line"]. " \r\n", FILE_APPEND); 
-        file_put_contents(Config::LOG_FILE_NAME, "injection: ".$injection. " \r\n", FILE_APPEND); 
-        file_put_contents(Config::LOG_FILE_NAME, "==================== \r\n", FILE_APPEND); 
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new Logger();
+        }
+        return self::$instance;
+    }
 
+    private function log($backtrace, $injection) {
+        file_put_contents($this->filePathToLogInstantiations, "==================== \r\n", FILE_APPEND); 
+        file_put_contents($this->filePathToLogInstantiations, "file: ".$backtrace[0]["file"]. " \r\n", FILE_APPEND); 
+        file_put_contents($this->filePathToLogInstantiations, "line: ".$backtrace[0]["line"]. " \r\n", FILE_APPEND); 
+        file_put_contents($this->filePathToLogInstantiations, "injection: ".$injection. " \r\n", FILE_APPEND); 
+        file_put_contents($this->filePathToLogInstantiations, "==================== \r\n", FILE_APPEND); 
+    }
+
+    public function tryLoggingInjection($backtrace, $injection) {
+        if (Config::IS_LOGGING_ENABLED) {
+            try {
+                Validator::checkIfFileExists($this->filePathToLogInstantiations);
+                $this->log($backtrace, $injection);
+            }
+            catch(\WorkflowErrors\FileNotFoundException $e) {
+                var_dump($e->getMessage());
+            }
+        }
     }
 }

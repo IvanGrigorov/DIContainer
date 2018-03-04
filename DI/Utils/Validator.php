@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 9:54:58 pm
+ * Last Modified: Sunday, 4th March 2018 6:18:06 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -19,7 +19,7 @@ require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 require_once(dirname(__FILE__)."/../Lib/Config.php");
 
 
-use ObjectParametersExceptions as ObjectParamException; 
+use ObjectParametersExceptions as ObjectParametersExceptions; 
 use GlobalExceptions as CustomGlobalExceptions;
 use WorkflowErrors as WorkflowErrors;
 
@@ -31,20 +31,20 @@ final class Validator {
             throw new \CustomGlobalExceptions\ParameterNotGIvenException();
         }
         if (!isset($injectionConfig["params"])) {
-            throw new \ObjectParamException\MissingParametersException();
+            throw new \ObjectParametersExceptions\MissingParametersException();
         }
         foreach($injectionConfig["params"] as $key => $value) {
             $correctNameIsGiven = false;
             foreach($inputParams["params"] as $inputparam) {
                 if ($key === $inputparam["name"]) {
                     if (!isset($inputparam["value"]) && !isset($value["defaultValue"])) {
-                        throw new \ObjectParamException\MissingValueForParametersException($param["name"]);
+                        throw new \ObjectParametersExceptions\MissingValueForParametersException($inputparam["name"]);
                     }
                     $correctNameIsGiven = true;
                 }
             } 
             if (!$correctNameIsGiven) {
-                throw new \ObjectParamException\MissingNameInParametersException($param["name"]);
+                throw new \ObjectParametersExceptions\MissingNameInParametersException($inputparam["name"]);
             }
         }
     }
