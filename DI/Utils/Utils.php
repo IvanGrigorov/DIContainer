@@ -6,19 +6,18 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 9:50:56 pm
+ * Last Modified: Monday, 5th March 2018 2:32:37 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-//define("FILE_LOCATION", dirname(__FILE__));
 
 require_once(dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 
-use GlobalExceptions as CustomGlobalExceptions;
-use WorkflowErrors as WorkflowErrors;
+use GlobalExceptions;
+use WorkflowErrors;
 
 
 final class Utils {
@@ -30,7 +29,7 @@ final class Utils {
 
     public function extractClassNameFromInterfaceName($interface) {
         if (!isset($interface)) {
-            throw new \CustomGlobalExceptions\ParameterNotGIvenException();
+            throw new \GlobalExceptions\ParameterNotGIvenException();
         }
         $replacesCount = 1;
         $className = str_replace("I", "_", $interface, $replacesCount); 

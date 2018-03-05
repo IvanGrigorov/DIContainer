@@ -6,19 +6,18 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 4th March 2018 6:04:15 pm
+ * Last Modified: Monday, 5th March 2018 2:32:42 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-//define("FILE_LOCATION", dirname(__FILE__));
 require_once(dirname(__FILE__)."/../Lib/Config.php");
 require_once(dirname(__FILE__)."/ErrorLogger.php");
 require_once(dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
 require_once(dirname(__FILE__)."/../Utils/Validator.php");
 
-use WorkflowErrors as WorkflowErrors;
+use WorkflowErrors;
 
 final class Logger {
 

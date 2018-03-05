@@ -6,25 +6,18 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Saturday, 3rd March 2018 9:49:31 pm
+ * Last Modified: Monday, 5th March 2018 5:56:05 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//define("FILE_LOCATION", dirname(__FILE__));
-
  require_once(dirname(__FILE__)."/../AutoLoader/AutoLoader.php");
  require_once(dirname(__FILE__)."/../AutoLoader/LoaderConfig.php");
  require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
+ require_once(dirname(__FILE__)."/Proxy/Proxy.php");
 
- use WorkflowErrors as WorkflowErrors;
+ use WorkflowErrors;
  class DIContainer {
     
     private static $self = null; 
@@ -41,17 +34,20 @@
         return DIContainer::$self;
     }
     
-    public static function instantiateClass($class) {
+    public static function instantiateClass($class, $isLazy) {
         if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
             $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
             throw $exception;
 
         }
         DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
+        if ($isLazy) {
+            return new Proxy($class);
+        }
         return new $class();
     }
     
-    public static function instatiateSingletonClass($class) {
+    public static function instatiateSingletonClass($class, $isLazy) {
         if (!Validator::checkIfConstantIsDefined(constant("LoaderConfig::".strtoupper($class)))) {
             $exception = new  \WorkflowErrors\ConstantNotDefinedException($constantName);
             throw $exception;
@@ -60,7 +56,12 @@
         DIContainer::getInstance()->loader->load(constant("LoaderConfig::".strtoupper($class)));
         $fieldName = "_".$class;
         if (!isset(DIContainer::getInstance()->$fieldName)) {
-            DIContainer::getInstance()->$fieldName = new $class();
+            if ($isLazy) {
+                DIContainer::getInstance()->$fieldName =  new Proxy($class);
+            }
+            else {
+                DIContainer::getInstance()->$fieldName = new $class();
+            }
         }
         return DIContainer::getInstance()->$fieldName;
     }
@@ -100,6 +101,9 @@
                         }
                     }
                 }
+            }
+            if ($injectionConfig["lazy"]) {
+                return new Proxy($injectionConfig["className"], $setParams);
             }
             return $reflectionClass->newInstanceArgs($setParams);
         }

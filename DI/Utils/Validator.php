@@ -6,29 +6,28 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 4th March 2018 6:18:06 pm
+ * Last Modified: Monday, 5th March 2018 2:32:35 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-//define("FILE_LOCATION", dirname(__FILE__));
 require_once(dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
 require_once(dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 require_once(dirname(__FILE__)."/../Lib/Config.php");
 
 
-use ObjectParametersExceptions as ObjectParametersExceptions; 
-use GlobalExceptions as CustomGlobalExceptions;
-use WorkflowErrors as WorkflowErrors;
+use ObjectParametersExceptions; 
+use GlobalExceptions;
+use WorkflowErrors;
 
 
 final class Validator {
 
     public static function CheckForValidInjectionWithParameters($injectionConfig, $inputParams) {
         if (!isset($injectionConfig) || !isset($inputParams)) {
-            throw new \CustomGlobalExceptions\ParameterNotGIvenException();
+            throw new \GlobalExceptions\ParameterNotGIvenException();
         }
         if (!isset($injectionConfig["params"])) {
             throw new \ObjectParametersExceptions\MissingParametersException();

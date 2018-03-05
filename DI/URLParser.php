@@ -3,10 +3,10 @@
 
 class URLParser  {
 
-    private $url;
+    public $url;
 
-    public function __construct($url) {
-        $this->url = $url;
+    public function __construct() {
+        //$this->url = $url;
     }
     
     
@@ -14,6 +14,10 @@ class URLParser  {
         $urlQuery = explode("/", $url);
         return $urlQuery;
         
+    }
+
+    function parseUrlTest($url, $one, $two) {
+        return ($url.$one.$two);        
     }
     
 } 

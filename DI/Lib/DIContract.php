@@ -6,19 +6,11 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 4th March 2018 6:11:59 pm
+ * Last Modified: Monday, 5th March 2018 5:55:38 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
-
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//define("FILE_LOCATION", dirname(__FILE__));
 
 require_once ("Container.php");
 require_once (dirname(__FILE__)."/../Utils/Validator.php");
@@ -28,11 +20,13 @@ require_once (dirname(__FILE__)."/../Log/ErrorLogger.php");
 require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
 require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
+require_once (dirname(__FILE__)."/Proxy/Proxy.php");
 
 
-use GlobalExceptions as CustomGlobalExceptions;
-use WorkflowErrors as WorkflowErrors;
-use ObjectParametersExceptions as ObjectParametersExceptions;
+
+use GlobalExceptions;
+use WorkflowErrors;
+use ObjectParametersExceptions;
 
 
 
@@ -61,7 +55,8 @@ class DIContract {
     private function mapInstances() {
         DIContract::$self->mappedObject["_URLParser"] = [
             "className" => "URLParser",
-            "isSingleton" => true
+            "isSingleton" => true,
+            "lazy" => true
         ];
         DIContract::$self->mappedObject["_RoutingMechanism"] = [
             "className" => "RoutingMechanism",
@@ -75,12 +70,6 @@ class DIContract {
             "className" => "GroundView",
             "isSingleton" => true
         ];
-            
-    
-        //DIContract::$self->_URLParser = DIContainer::instatiateSingletonClass("URLParser");
-        //DIContract::$self->_RoutingMechanism = DIContainer::instatiateSingletonClass("RoutingMechanism");
-        //DIContract::$self->_ControllerRepository = DIContainer::instatiateSingletonClass("ControllerRepository");
-
 
     } 
     
@@ -96,28 +85,15 @@ class DIContract {
         DIContract::$self->mappedParameterBasedObjects["_URLParser"] = [
             "className" => "URLParser",
             "isSingleton" => true,
+            "lazy" => true,
             "params" => array(
                 "url" => 
-                    [
+                [
                         "defaultValue" => "defaultvalue"
-                    ]
+                ]
             )
         ];
     }
-
-    //private function mapInjectionHieararchyObjects() {
-    //    DIContract::$self->mappedInjectionHieararchyObjects["_URLParser"] = [
-    //        "className" => "URLParser",
-    //        "isSingleton" => true,
-    //        "params" => array(
-    //            "url" => 
-    //                [
-    //                    "injectionMathod" => "defaultvalue",
-    //                    "params"
-    //                ]
-    //        )
-    //    ];
-    //}
     
     public function getInjection($interface) {
         if (!Validator::checkIfInterfaceIsLoaded($interface)) {
@@ -126,22 +102,24 @@ class DIContract {
         else {
             $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
             if (!isset(DIContract::$self->mappedObject[$className])) {
-                throw new \CustomGlobalExceptions\ParameterNotSetException($className);
+                throw new \GlobalExceptions\ParameterNotSetException($className);
             }
             
             $instanceToInject = null;
             if (!isset(DIContract::$self->mappedObject[$className]["isSingleton"])) {
-                throw new \CustomGlobalExceptions\ParameterNotSetException("isSingleton");
+                throw new \GlobalExceptions\ParameterNotSetException("isSingleton");
             }
             if (DIContract::$self->mappedObject[$className]["isSingleton"]) {
                 $trace = debug_backtrace();
                 Logger::getInstance()->tryLoggingInjection($trace, $className);
-                $instanceToInject = DIContainer::instatiateSingletonClass(DIContract::$self->mappedObject[$className]["className"]);
+                $instanceToInject = DIContainer::instatiateSingletonClass(DIContract::$self->mappedObject[$className]["className"], 
+                    DIContract::$self->mappedObject[$className]["lazy"]);
             }            
             else {
                 $trace = debug_backtrace();
                 Logger::getInstance()->tryLoggingInjection($trace, $className);
-                $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"]);
+                $instanceToInject = DIContainer::instantiateClass(DIContract::$self->mappedObject[$className]["className"],
+                DIContract::$self->mappedObject[$className]["lazy"]);
             } 
             if (!$instanceToInject instanceof $interface && Config::CHECK_FOR_INTERFACE) {
                 throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
@@ -156,10 +134,10 @@ class DIContract {
         }
         $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
         if (!isset(DIContract::$self->mappedObject[$className])) {
-            throw new \CustomGlobalExceptions\ParameterNotSetException($className);
+            throw new \GlobalExceptions\ParameterNotSetException($className);
         }
         if (!isset(DIContract::$self->mappedObject[$className]["allowedInvocators"])) {
-            throw new \CustomGlobalExceptions\ParameterNotSetException('allowedInvocators');
+            throw new \GlobalExceptions\ParameterNotSetException('allowedInvocators');
         }
         $allowedInvocators = DIContract::$self->mappedObject[$className]["allowedInvocators"];
         if (!isset($allowedInvocators)) {
@@ -202,7 +180,7 @@ class DIContract {
         }
         $className = DIContract::$self->utilsMethodsClass->extractClassNameFromInterfaceName($interface);
         if (!isset(DIContract::$self->mappedParameterBasedObjects[$className])) {
-            throw new \CustomGlobalExceptions\ParameterNotSetException($className);
+            throw new \GlobalExceptions\ParameterNotSetException($className);
         }
         $injectionConfig = DIContract::$self->mappedParameterBasedObjects[$className];
         try {
@@ -215,7 +193,7 @@ class DIContract {
         Logger::getInstance()->tryLoggingInjection($trace, $className);
         $instanceToInject = null;
         if (!isset(DIContract::$self->mappedObject[$className]["isSingleton"])) {
-            throw new \CustomGlobalExceptions\ParameterNotSetException("isSingleton");
+            throw new \GlobalExceptions\ParameterNotSetException("isSingleton");
         }
         if (DIContract::$self->mappedParameterBasedObjects[$className]["isSingleton"]) {
             $instanceToInject = DIContainer::instantiateSingletonObjectWithParameters($injectionConfig["className"], $params, $injectionConfig);
@@ -228,16 +206,5 @@ class DIContract {
             throw new \WorkflowErrors\InterfaceNotInheritedException($interface);
         }
         return $instanceToInject;
-
     }
-
-
-
-    //public function getInjectionWithMappedInjectionParameters($interface, $params) {
-    //    if(!isset($interface) || !isset($params)) {
-    //        throw new \CustomGlobalExceptions\ParameterNotGIvenException("Parameters are missing or not passed to the function");
-    //    }
-        // Move class name extraction in method 
-    //    $className = DIContract::$self->$utilsMethodsClass->extractClassNameFromInterfaceName($interface);
-    //}
 }

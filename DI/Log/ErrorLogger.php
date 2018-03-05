@@ -6,13 +6,12 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Sunday, 4th March 2018 6:03:55 pm
+ * Last Modified: Monday, 5th March 2018 2:32:38 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
-//define("FILE_LOCATION", dirname(__FILE__));
 require_once(dirname(__FILE__)."/../Lib/Config.php");
 
 final class ErrorLogger {
