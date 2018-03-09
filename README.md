@@ -8,20 +8,12 @@ Hi, :smiley: :wave:
 This is a minimalistic PHP project with the aim to provide simple but powerfull solution to anyone, who thinks **Dipendency Injection** (DI) is something usefull.  
 
 *PHPDI* is a DI container, allowing you to controll your dependencies throughout your whole project. Here I will not explain in details, what DI and the containers are. For more references, you can visit this site :point_right: [HERE](hhttps://en.wikipedia.org/wiki/Dependency_injectionttps://www.google.com)
-  
 
-## So, now about the project 
-------------------------------
-
-The whole disign behind the realisation is *Convention over Configuration*. That, does not mean that you will not need to adjust some tweeks,but nothing special. 
-
-**Currently there are two versions of the project:**  
-
-- [PHPDI](#phpdi)
+ - [PHPDI](#phpdi)
     - [Welcome to the PHPDI project](#welcome-to-the-phpdi-project)
     - [So, now about the project](#so-now-about-the-project)
     - [**PHPDI_v1.1**](#phpdiv11)
-            - [Config:](#config)
+        - [Config:](#config)
         - [Advantages](#advantages)
             - [No more endless `required_once`](#no-more-endless-requiredonce)
             - [Scope Check](#scope-check)
@@ -32,13 +24,21 @@ The whole disign behind the realisation is *Convention over Configuration*. That
     - [**PHPDI_v1.2**](#phpdiv12)
     - [Conclusion](#conclusion)
 
+
+## So, now about the project 
+------------------------------
+
+The whole disign behind the realisation is *Convention over Configuration*. That, does not mean that you will not need to adjust some tweeks,but nothing special. 
+
+**Currently there are two versions of the project:**  
+
 *Beta* state means, that everithing tested so far works, but there might be some small bugs. 
 
 *Alpha* state means, that it is still in phase of testing and might be unstable, but you can always give a try and report an issue, bug or missing feature. 
 
 ## **PHPDI_v1.1** 
 
-#### Config: 
+### Config: 
 
 | Config options | Description | Object type (Injection)  
 | ------------- | ------------ |:-------------:| 
