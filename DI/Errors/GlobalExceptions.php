@@ -12,10 +12,14 @@
  * License: MIT
  */
 
-namespace GlobalExcpetions;
-use \Exception as Exception;
 
-    final class ParameterNotGIvenException extends Exception {
+namespace GlobalExcpetions;
+
+
+require_once (dirname(__FILE__)."/AbstractException.php");
+use \AbstractException as AbstractException;
+
+    final class ParameterNotGIvenException extends AbstractException {
 
         //public function _construct($paramName) {
         //    parent::_construct("Parameter: ".$paramName." is missing or not passed to the function ");
@@ -26,7 +30,7 @@ use \Exception as Exception;
         }
     }
 
-    final class ParameterNotSetException extends Exception {
+    final class ParameterNotSetException extends AbstractException {
 
         public function __construct($parameter) {
             parent::__construct($parameter . " is not set in the object config");

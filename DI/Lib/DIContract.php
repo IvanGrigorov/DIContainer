@@ -28,6 +28,7 @@ require_once (dirname(__FILE__)."/../Log/ErrorLogger.php");
 require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
 require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
+require_once (dirname(__FILE__)."/../Errors/AbstractException.php");
 
 
 use GlobalExceptions as CustomGlobalExceptions;
