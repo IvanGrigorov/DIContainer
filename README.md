@@ -1,15 +1,3 @@
-/*
- * File: README.md
- * Project: PHPDI
- * File Created: Saturday, 17th March 2018 4:55:36 pm
- * Author: Ivan Grigorov
- * Contact:  ivangrigorov9 at gmail.com
- * -----
- * Last Modified: Saturday, 17th March 2018 4:55:44 pm
- * Modified By: Ivan Grigorov
- * -----
- * License: MIT
- */
 # PHPDI
 
 ## Welcome to the PHPDI project
