@@ -36,7 +36,7 @@ The whole disign behind the realisation is *Convention over Configuration*. That
 
 *Alpha* state means, that it is still in phase of testing and might be unstable, but you can always give a try and report an issue, bug or missing feature. 
 
-## **PHPDI_v1.1** 
+## **PHPDI_v1.1** - Beta
 
 ### Config: 
 
@@ -106,7 +106,7 @@ All these things, can be modified in the Config.php
     If "value" is not given, the default from the config is used. 
 
 
-## **PHPDI_v1.2** 
+## **PHPDI_v1.2** - Alpha
 
 In progress, ***main feature lazy instantiation*** 
 
