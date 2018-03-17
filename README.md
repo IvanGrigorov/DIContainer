@@ -7,7 +7,7 @@ Hi, :smiley: :wave:
 
 This is a minimalistic PHP project with the aim to provide simple but powerfull solution to anyone, who thinks **Dipendency Injection** (DI) is something usefull.  
 
-*PHPDI* is a DI container, allowing you to controll your dependencies throughout your whole project. Here I will not explain in details, what DI and the containers are. For more references, you can visit this site :point_right: [HERE](https://en.wikipedia.org/wiki/Dependency_injectionttps://www.google.com)
+*PHPDI* is a DI container, allowing you to controll your dependencies throughout your whole project. Here I will not explain in details, what DI and the containers are. For more references, you can visit this site :point_right: [HERE](https://en.wikipedia.org/wiki/Dependency_injection)
 
  - [PHPDI](#phpdi)
     - [Welcome to the PHPDI project](#welcome-to-the-phpdi-project)
