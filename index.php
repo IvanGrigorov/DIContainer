@@ -11,7 +11,7 @@ and open the template in the editor.
     </head>
     <body>
         <?php
-        include_once(dirname(__FILE__)."/DI/Lib/IContract.php");
+        include_once(dirname(__FILE__)."/DI/Lib/DIContract.php");
         $contract =  DIContract::getInstance();
         $test = $contract->getInjectionWithParams("IURLParser", 
         ["params" => array([
