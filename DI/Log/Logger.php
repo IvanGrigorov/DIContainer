@@ -15,7 +15,7 @@
 //define("FILE_LOCATION", dirname(__FILE__));
 require_once(dirname(__FILE__)."/../Lib/Config.php");
 require_once(dirname(__FILE__)."/ErrorLogger.php");
-require_once(dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
+require_once(dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 require_once(dirname(__FILE__)."/../Utils/Validator.php");
 
 use WorkflowErrors as WorkflowErrors;
