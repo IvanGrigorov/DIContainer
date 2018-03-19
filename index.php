@@ -15,7 +15,7 @@ and open the template in the editor.
         $contract =  DIContract::getInstance();
         $test = $contract->getInjectionWithParams("IURLParser", 
         ["params" => array([
-            "name" => "usadasdrl"])
+            "name" => "url"])
         ]);
         $test2 = $contract->getInjectionWithParams("IURLParser", 
         ["params" => array([
