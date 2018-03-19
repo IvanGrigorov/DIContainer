@@ -26,7 +26,7 @@ require_once (dirname(__FILE__)."/../Utils/Utils.php");
 require_once (dirname(__FILE__)."/../Log/Logger.php");
 require_once (dirname(__FILE__)."/../Log/ErrorLogger.php");
 require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
-require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
+require_once (dirname(__FILE__)."/../Errors/WorkflowErrors.php");
 require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
 require_once (dirname(__FILE__)."/../Errors/AbstractException.php");
 
