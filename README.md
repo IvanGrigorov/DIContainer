@@ -108,7 +108,9 @@ All these things, can be modified in the Config.php
 
 ## **PHPDI_v1.2** 
 
-In progress, ***main feature lazy instantiation*** 
+In progress, 
+ - ***main feature lazy instantiation*** 
+ - ***easier use of different configs*** 
 
 
 ## Conclusion 
