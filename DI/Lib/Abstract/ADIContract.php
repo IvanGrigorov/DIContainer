@@ -6,13 +6,13 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Wednesday, 21st March 2018 10:47:55 pm
+ * Last Modified: Wednesday, 21st March 2018 11:36:49 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
  */
 
- require_once(dirname(__FILE__)."/IDIContract.PHP");
+ require_once(dirname(__FILE__)."/IDIContract.php");
  require_once (dirname(__FILE__)."/../Container.php");
 require_once (dirname(__FILE__)."/../../Utils/Validator.php");
 require_once (dirname(__FILE__)."/../../Utils/Utils.php");
