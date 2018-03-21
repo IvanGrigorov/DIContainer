@@ -12,8 +12,8 @@
  * License: MIT
  */
 
-require_once(dirname(__FILE__)."/Abstract/IDIContract.PHP");
-require_once(dirname(__FILE__)."/Abstract/ADIContract.PHP");
+require_once(dirname(__FILE__)."/Abstract/IDIContract.php");
+require_once(dirname(__FILE__)."/Abstract/ADIContract.php");
 
 
 class DIContract extends ADIContract implements IDIContract{
