@@ -21,6 +21,8 @@ require_once (dirname(__FILE__)."/../Errors/GlobalExceptions.php");
 require_once (dirname(__FILE__)."/../Errors/WorkFlowErrors.php");
 require_once (dirname(__FILE__)."/../Errors/ObjectParametersExceptions.php");
 require_once (dirname(__FILE__)."/Proxy/Proxy.php");
+require_once (dirname(__FILE__)."/DIContractConfigParser.php");
+
 
 
 
@@ -36,63 +38,75 @@ class DIContract {
     private $mappedObject = array();
     private $mappedValueTypes = array();
     private $utilsMethodsClass;
-
+    private $DIContractConfigParser;
     private function __construct() {
         
     }
     public static function getInstance() {
         if (DIContract::$self === null) {
             DIContract::$self = new DIContract();
+            //DIContract::$self->mapInstances();
+            //DIContract::$self->mapValueTypes();
+            //DIContract::$self->mapParameterBasedObjects();
+            DIContract::$self->utilsMethodsClass = new Utils();
+            DIContract::$self->DIContractConfigParser =  new DIContractConfigParser(dirname(__FILE__)."/../ConfigDependencies.json");
             DIContract::$self->mapInstances();
             DIContract::$self->mapValueTypes();
             DIContract::$self->mapParameterBasedObjects();
-            DIContract::$self->utilsMethodsClass = new Utils();
+
+
             
         }
         return DIContract::$self;
     }
     
     private function mapInstances() {
-        DIContract::$self->mappedObject["_URLParser"] = [
-            "className" => "URLParser",
-            "isSingleton" => true,
-            "lazy" => true
-        ];
-        DIContract::$self->mappedObject["_RoutingMechanism"] = [
-            "className" => "RoutingMechanism",
-            "isSingleton" => true
-        ];
-        DIContract::$self->mappedObject["_ControllerRepository"] = [
-            "className" => "ControllerRepository",
-            "isSingleton" => true
-        ];
-        DIContract::$self->mappedObject["_View"] = [
-            "className" => "GroundView",
-            "isSingleton" => true
-        ];
+        $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMappedObject();
+        foreach($mappedInstancesFromConfig as $key => $dependency) {
+            foreach($dependency as $dependencyName => $dependencyConfig) {
+                $dependencyKey = "_".$dependencyName; 
+                DIContract::$self->mappedObject[$dependencyKey] = [
+                    "className" => $dependencyConfig["className"],
+                    "isSingleton" => $dependencyConfig["isSingleton"],
+                    "lazy" => $dependencyConfig["lazy"]
+                ];
+            }
 
-    } 
+        }
+    }
     
     private function mapValueTypes() {
-        DIContract::$self->mappedValueTypes[] = [
-            "name" => "Name of Value",
-            "type" => "string",
-            "value" => "Test Value"
-        ];
+        $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMapValueTypes();
+        foreach($mappedInstancesFromConfig as $key => $dependency) {
+            DIContract::$self->mappedValueTypes[] = [
+                "name" => $dependency["name"],
+                "type" => $dependency["type"],
+                "value" => $dependency["value"]
+            ];
+        }
     }
 
     private function mapParameterBasedObjects() {
-        DIContract::$self->mappedParameterBasedObjects["_URLParser"] = [
-            "className" => "URLParser",
-            "isSingleton" => true,
-            "lazy" => true,
-            "params" => array(
-                "url" => 
-                [
-                        "defaultValue" => "defaultvalue"
-                ]
-            )
-        ];
+        $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMapParameterBasedObjects();
+        foreach($mappedInstancesFromConfig as $key => $dependency) {
+            foreach($dependency as $dependencyName => $dependencyConfig) {
+                $dependencyKey = "_".$dependencyName; 
+                DIContract::$self->mappedParameterBasedObjects[$dependencyKey] = [
+                    "className" => $dependencyConfig["className"],
+                    "isSingleton" => $dependencyConfig["isSingleton"],
+                    "lazy" => $dependencyConfig["lazy"],
+                    "params" => []
+                ];
+                foreach($dependencyConfig["params"] as $params => $paramConfig) {
+                    foreach($paramConfig as $paramName => $paramValues) {
+                        DIContract::$self->mappedParameterBasedObjects[$dependencyKey]["params"][$paramName] = [
+                            "defaultValue" => $paramValues["defaultValue"]
+
+                        ];
+                    }
+                }
+            }
+        }
     }
     
     public function getInjection($interface) {
@@ -166,6 +180,7 @@ class DIContract {
         foreach (DIContract::$self->mappedValueTypes as $valueType ) {
             if ($valueType["name"] === $nameOfValueType && 
                     $valueType["type"] === $typeOfValue) {
+                $trace = debug_backtrace();
                 Logger::getInstance()->tryLoggingInjection($trace, $valueType["name"]);            
                 return $valueType["value"];
             }

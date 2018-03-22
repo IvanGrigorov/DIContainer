@@ -17,7 +17,7 @@ and open the template in the editor.
 
 
         $test = $contract->getInjection("IURLParser");
-
+        $testValueType = $contract->getInjectedValueType("named", "string");
         $test = $contract->getInjectionWithParams("IURLParser", 
         ["params" => array([
             "name" => "url",
