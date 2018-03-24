@@ -108,7 +108,7 @@ All these things, can be modified in the Config.php
     If "value" is not given, the default from the config is used. 
 
 
-## **PHPDI_v1.2** 
+## **PHPDI_v1.2** [![Build Status](https://travis-ci.org/IvanGrigorov/PHPDIContainer.svg?branch=PHPDI_v1.2)](https://travis-ci.org/IvanGrigorov/PHPDIContainer)
 
 In progress, 
  - ***main feature lazy instantiation*** 
