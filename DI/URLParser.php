@@ -5,8 +5,8 @@ class URLParser  {
 
     public $url;
 
-    public function __construct() {
-        //$this->url = $url;
+    public function __construct($url) {
+        $this->url = $url;
     }
     
     

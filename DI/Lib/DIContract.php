@@ -120,7 +120,7 @@ class DIContract {
                 ];
                 foreach($dependencyConfig["params"] as $params => $paramConfig) {
                     foreach($paramConfig as $paramName => $paramValues) {
-                        if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($paramValues)) {
+                        if (!ConfigValidator::isParamDefaultValueSet($paramValues)) {
                             throw new \WorkflowErrors\DefaultValueForReferenceInjectionWithParamMissingException($dependencyName, $paramName);
                         }
                         DIContract::$self->mappedParameterBasedObjects[$dependencyKey]["params"][$paramName] = [
@@ -231,7 +231,7 @@ class DIContract {
         $trace = debug_backtrace();
         Logger::getInstance()->tryLoggingInjection($trace, $className);
         $instanceToInject = null;
-        if (!isset(DIContract::$self->mappedObject[$className]["isSingleton"])) {
+        if (!isset(DIContract::$self->mappedParameterBasedObjects[$className]["isSingleton"])) {
             throw new \GlobalExceptions\ParameterNotSetException("isSingleton");
         }
         if (DIContract::$self->mappedParameterBasedObjects[$className]["isSingleton"]) {
