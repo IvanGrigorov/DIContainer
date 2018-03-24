@@ -6,7 +6,7 @@
  * Author: Ivan Grigorov
  * Contact:  ivangrigorov9 at gmail.com
  * -----
- * Last Modified: Thursday, 22nd March 2018 11:48:44 pm
+ * Last Modified: Saturday, 24th March 2018 3:08:06 pm
  * Modified By: Ivan Grigorov
  * -----
  * License: MIT
@@ -34,14 +34,21 @@ final class DIContractConfigParser {
     }
 
     public function getMappedObject() {
-        return $this->decodedConfig["mapInstances"];
+        if ($this->decodedConfig["mapInstances"]) {
+            return $this->decodedConfig["mapInstances"];
+        }
+        return null;
     }
 
     public function getMapValueTypes() {
-        return $this->decodedConfig["mapValueTypes"];
-    }
+        if ($this->decodedConfig["mapValueTypes"]) {
+            return $this->decodedConfig["mapValueTypes"];
+        }
+        return null;    }
 
     public function getMapParameterBasedObjects() {
-        return $this->decodedConfig["mapParameterBasedObjects"];
-    }
+        if ($this->decodedConfig["mapParameterBasedObjects"]) {
+            return $this->decodedConfig["mapParameterBasedObjects"];
+        }
+        return null;    }
 }
