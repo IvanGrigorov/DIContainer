@@ -51,3 +51,24 @@ use \Exception as Exception;
         }
     }
 
+    final class ReferenceInjectionPropertiesMissingInConfigException extends Exception {
+
+        public function __construct($injection) {
+            parent::__construct("Configs: className, isSingleton or lazy properties not set for injection: ".$injection);
+        }
+    }
+
+    final class ValueTypeInjectionPropertiesMissingInConfigException extends Exception {
+
+        public function __construct() {
+            parent::__construct("Configs: value, type or name properties not set for injection");
+        }
+    }
+
+    final class DefaultValueForReferenceInjectionWithParamMissingException extends Exception {
+
+        public function __construct($dependency, $param) {
+            parent::__construct("Default value for injection: ". $injection ." with param: ". $param ." missing.");
+        }
+    }
+

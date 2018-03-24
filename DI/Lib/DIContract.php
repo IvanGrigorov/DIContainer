@@ -14,6 +14,7 @@
 
 require_once ("Container.php");
 require_once (dirname(__FILE__)."/../Utils/Validator.php");
+require_once (dirname(__FILE__)."/../Utils/ConfigValidator.php");
 require_once (dirname(__FILE__)."/../Utils/Utils.php");
 require_once (dirname(__FILE__)."/../Log/Logger.php");
 require_once (dirname(__FILE__)."/../Log/ErrorLogger.php");
@@ -62,9 +63,15 @@ class DIContract {
     
     private function mapInstances() {
         $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMappedObject();
+        if ($mappedInstancesFromConfig === null) {
+            return;
+        }
         foreach($mappedInstancesFromConfig as $key => $dependency) {
             foreach($dependency as $dependencyName => $dependencyConfig) {
-                $dependencyKey = "_".$dependencyName; 
+                $dependencyKey = "_".$dependencyName;
+                if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($dependencyConfig)) {
+                    throw new \WorkflowErrors\ReferenceInjectionPropertiesMissingInConfigException($dependencyName);
+                }
                 DIContract::$self->mappedObject[$dependencyKey] = [
                     "className" => $dependencyConfig["className"],
                     "isSingleton" => $dependencyConfig["isSingleton"],
@@ -77,7 +84,14 @@ class DIContract {
     
     private function mapValueTypes() {
         $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMapValueTypes();
+        if ($mappedInstancesFromConfig === null) {
+            return;
+        }
+        
         foreach($mappedInstancesFromConfig as $key => $dependency) {
+            if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($dependency)) {
+                throw new \WorkflowErrors\ValueTypeInjectionPropertiesMissingInConfigException();
+            }
             DIContract::$self->mappedValueTypes[] = [
                 "name" => $dependency["name"],
                 "type" => $dependency["type"],
@@ -88,9 +102,16 @@ class DIContract {
 
     private function mapParameterBasedObjects() {
         $mappedInstancesFromConfig = DIContract::$self->DIContractConfigParser->getMapParameterBasedObjects();
+        if ($mappedInstancesFromConfig === null) {
+            return;
+        }
+        
         foreach($mappedInstancesFromConfig as $key => $dependency) {
             foreach($dependency as $dependencyName => $dependencyConfig) {
                 $dependencyKey = "_".$dependencyName; 
+                if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($dependencyConfig)) {
+                    throw new \WorkflowErrors\ReferenceInjectionPropertiesMissingInConfigException($dependencyName);
+                }
                 DIContract::$self->mappedParameterBasedObjects[$dependencyKey] = [
                     "className" => $dependencyConfig["className"],
                     "isSingleton" => $dependencyConfig["isSingleton"],
@@ -99,6 +120,9 @@ class DIContract {
                 ];
                 foreach($dependencyConfig["params"] as $params => $paramConfig) {
                     foreach($paramConfig as $paramName => $paramValues) {
+                        if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($paramValues)) {
+                            throw new \WorkflowErrors\DefaultValueForReferenceInjectionWithParamMissingException($dependencyName, $paramName);
+                        }
                         DIContract::$self->mappedParameterBasedObjects[$dependencyKey]["params"][$paramName] = [
                             "defaultValue" => $paramValues["defaultValue"]
 
