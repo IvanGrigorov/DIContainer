@@ -20,6 +20,7 @@ final class Config {
 
     const ERROR_FILE_NAME = "C:\Users\Ivan Grigorov\Desktop\Errors.txt";
     const IS_ERROR_LOGGING_ENABLED = true;
+    const IS_FULL_ERROR_LOGGING_ENABLED =  true;
 
     // =======================
     // INJECTION LOGGING

@@ -13,7 +13,6 @@
  * License: MIT
  */
 
-include_once("URLParser.php");
 
 class Proxy {
 

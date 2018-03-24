@@ -12,7 +12,7 @@
  * License: MIT
  */
 
-namespace GlobalExcpetions;
+namespace ObjectParametersExceptions;
 require_once (dirname(__FILE__)."/AbstractException.php");
 use \AbstractException as AbstractException;
 

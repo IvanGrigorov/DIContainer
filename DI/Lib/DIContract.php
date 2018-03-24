@@ -89,7 +89,7 @@ class DIContract {
         }
         
         foreach($mappedInstancesFromConfig as $key => $dependency) {
-            if (!ConfigValidator::areAllNodesForReferenceInjectionInserted($dependency)) {
+            if (!ConfigValidator::areAllNodesForValueTypeInjectionInserted($dependency)) {
                 throw new \WorkflowErrors\ValueTypeInjectionPropertiesMissingInConfigException();
             }
             DIContract::$self->mappedValueTypes[] = [
