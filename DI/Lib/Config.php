@@ -19,15 +19,15 @@ final class Config {
     // =======================
 
     const ERROR_FILE_NAME = "C:\Users\Ivan Grigorov\Desktop\Errors.txt";
-    const IS_ERROR_LOGGING_ENABLED = true;
-    const IS_FULL_ERROR_LOGGING_ENABLED =  true;
+    const IS_ERROR_LOGGING_ENABLED = false;
+    const IS_FULL_ERROR_LOGGING_ENABLED =  false;
 
     // =======================
     // INJECTION LOGGING
     // =======================
 
     const LOG_FILE_NAME = "C:\Users\Ivan Grigorov\Desktop\Logging.txt";
-    const IS_LOGGING_ENABLED = true;
+    const IS_LOGGING_ENABLED = false;
 
     // =======================
     // WORKFLOW
