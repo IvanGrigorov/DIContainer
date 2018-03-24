@@ -11,25 +11,25 @@
  * -----
  * License: MIT
  */
+namespace GlobalExcpetions;
+require_once (dirname(__FILE__)."/AbstractException.php");
+use \AbstractException as AbstractException;
 
-namespace WorkflowErrors;
-use \Exception as Exception;
-
-    final class ConvertingInterfaceToClassNameException extends Exception {
+    final class ConvertingInterfaceToClassNameException extends AbstractException {
 
         public function __construct($interface) {
             parent::__construct("Interface name is not correctly given: ".$interface);
         }
     }
 
-    final class FileNotFoundException extends Exception {
+    final class FileNotFoundException extends AbstractException {
 
         public function __construct($filepath) {
             parent::__construct("File not found: ".$filepath);
         }
     }
 
-    final class ConstantNotDefinedException extends Exception {
+    final class ConstantNotDefinedException extends AbstractException {
 
         public function __construct($constantName) {
             parent::__construct("Constant not defined: ".$constantName);
@@ -37,14 +37,14 @@ use \Exception as Exception;
     }
 
     
-    final class InterfaceNotInheritedException extends Exception {
+    final class InterfaceNotInheritedException extends AbstractException {
 
         public function __construct($interface) {
             parent::__construct("Mapped class do not inherits the given Inteface: ". $interface);
         }
     }
 
-    final class InterfaceNotLoadedException extends Exception {
+    final class InterfaceNotLoadedException extends AbstractException {
 
         public function __construct($interface) {
             parent::__construct($interface . " is not declared in the required stack");
