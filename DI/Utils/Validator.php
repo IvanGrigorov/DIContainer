@@ -40,10 +40,11 @@ final class Validator {
                         throw new \ObjectParametersExceptions\MissingValueForParametersException($inputparam["name"]);
                     }
                     $correctNameIsGiven = true;
+                    break;
                 }
             } 
             if (!$correctNameIsGiven) {
-                throw new \ObjectParametersExceptions\MissingNameInParametersException($inputparam["name"]);
+                throw new \ObjectParametersExceptions\MissingNameInParametersException($key);
             }
         }
     }
